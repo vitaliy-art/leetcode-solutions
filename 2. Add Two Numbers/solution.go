@@ -6,35 +6,38 @@
  * }
  */
 func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
-	head := &ListNode{}
-	current := head
+	head := l1
 
-	carry := 0
+	for (l1 != nil && l2 != nil && l1 != l2) || (l1 != nil && l1.Val >= 10) {
+		if l2 != nil && l1 != l2 {
+			l1.Val += l2.Val
+		}
 
-	for l1 != nil || l2 != nil || carry != 0 {
-		current.Next = &ListNode{}
-		current = current.Next
-		sum := carry
+		if l1.Val >= 10 {
+			l1.Val -= 10
+			if l1.Next != nil {
+				l1.Next.Val += 1
+			} else if l2 != nil && l2.Next != nil {
+				l1.Next = l2.Next
+				l1.Next.Val += 1
+			} else {
+				l1.Next = &ListNode{Val: 1}
+			}
+		}
 
-		if l1 != nil {
-			sum += l1.Val
+		if l1.Next != nil {
 			l1 = l1.Next
+		} else {
+			if l2 != nil {
+				l1.Next = l2.Next
+			}
+			break
 		}
 
 		if l2 != nil {
-			sum += l2.Val
 			l2 = l2.Next
 		}
-
-		if sum < 10 {
-			carry = 0
-		} else {
-			carry = 1
-			sum -= 10
-		}
-
-		current.Val = sum
 	}
 
-	return head.Next
+	return head
 }
